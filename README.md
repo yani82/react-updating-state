@@ -36,9 +36,9 @@ what changes we'd like to make!
 For example, let's say we have a component with a button, and a bit of text to
 indicate whether that button has been pressed yet:
 
-```js
+```jsx
 // src/components/ClickityClick.js
-import React from 'react';
+import React from "react";
 
 class ClickityClick extends React.Component {
   constructor() {
@@ -46,7 +46,7 @@ class ClickityClick extends React.Component {
 
     // Define the initial state:
     this.state = {
-      hasBeenClicked: false
+      hasBeenClicked: false,
     };
   }
 
@@ -57,7 +57,7 @@ class ClickityClick extends React.Component {
   render() {
     return (
       <div>
-        <p>I have {this.state.hasBeenClicked ? null : 'not'} been clicked!</p>
+        <p>I have {this.state.hasBeenClicked ? null : "not"} been clicked!</p>
         <button onClick={this.handleClick}>Click me!</button>
       </div>
     );
@@ -67,19 +67,19 @@ class ClickityClick extends React.Component {
 export default ClickityClick;
 
 // src/index.js
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React from "react";
+import ReactDOM from "react-dom";
 
-import ClickityClick from './components/ClickityClick';
+import ClickityClick from "./components/ClickityClick";
 
-ReactDOM.render(<ClickityClick />, document.getElementById('root'));
+ReactDOM.render(<ClickityClick />, document.getElementById("root"));
 ```
 
 To update our state, we use `this.setState()` and pass in an object. This object
 will get merged with the current state. When the state has been updated, our
 component re-renders automatically. Handy!
 
-```js
+```jsx
 // src/components/ClickityClick.js
 ...
 
@@ -101,7 +101,7 @@ When updating state, we don't have to pass in the entire state, just the
 property we want to update. For example, consider the following state for our
 component:
 
-```js
+```jsx
 {
   hasBeenClicked: false,
   currentTheme: 'blue',
@@ -112,7 +112,7 @@ If we updated the `hasBeenClicked` using `this.setState()` like we did above, it
 would _merge_ the new state with the existing state, resulting in this new
 state:
 
-```js
+```jsx
 {
   hasBeenClicked: true,
   currentTheme: 'blue',
@@ -123,7 +123,7 @@ One super important thing to note is that it only merges things on the first
 level. Let's say we're working on a component that lets a user fill in an
 address, and the component's state is structured like this:
 
-```js
+```jsx
 {
   theme: 'blue',
   addressInfo: {
@@ -138,17 +138,17 @@ address, and the component's state is structured like this:
 If we wanted to update the `addressInfo.city` field, you might think we can
 update it like this:
 
-```js
+```jsx
 this.setState({
   addressInfo: {
-    city: 'New York City'
-  }
+    city: "New York City",
+  },
 });
 ```
 
 **However**, this would result in the following state shape:
 
-```js
+```jsx
 {
   theme: 'blue',
   addressInfo: {
@@ -163,23 +163,23 @@ the object you pass into `this.setState()`. A deep merge means that the merge
 will happen recursively, leaving any unchanged properties intact. For example,
 consider the following code sample:
 
-```js
+```jsx
 const house = {
   kitchen: {
-    cabinets: 'white',
+    cabinets: "white",
     table: {
-      legs: 4
-    }
-  }
+      legs: 4,
+    },
+  },
 };
 
 // Note: `deepMerge()` isn't actually a built-in function
 const updatedHouse = deepMerge(house, {
   kitchen: {
     table: {
-      legs: 8
-    }
-  }
+      legs: 8,
+    },
+  },
 });
 ```
 
@@ -190,22 +190,22 @@ intact.
 We can solve this using `Object.assign()` by merging the `addressInfo` object
 with the new data ourselves:
 
-```js
+```jsx
 this.setState({
   addressInfo: Object.assign({}, this.state.addressInfo, {
-    city: 'New York City'
-  })
+    city: "New York City",
+  }),
 });
 ```
 
 **Or**, we could do this the **RECOMMENDED** way, by using the spread operator in JS:
 
-```js
+```jsx
 this.setState({
   addressInfo: {
     ...this.state.addressInfo,
-    city: 'New York City'
-  }
+    city: "New York City",
+  },
 });
 ```
 
@@ -219,7 +219,7 @@ this.setState({
 
 Both of these would result in the state updating to this shape:
 
-```js
+```jsx
 {
   theme: 'blue',
   addressInfo: {
@@ -242,7 +242,7 @@ simultaneously whenever React feels it's appropriate. This might result in some
 unexpected behavior. Going back to our `ClickityClick` component above, let's
 log the state after we've set it using `this.setState()`:
 
-```js
+```jsx
 // src/components/ClickityClick.js
 
 ...
@@ -265,7 +265,7 @@ callback as a second argument to the `this.setState()` function. This callback
 will fire once the state has been updated, ensuring that `this.state` is now the
 new, shiny updated state. In code:
 
-```js
+```jsx
 // src/components/ClickityClick.js
 
 ...
@@ -316,25 +316,25 @@ One way to deal with this is to handle the logic that involves `this.state`
 outside of `setState`. Below is an example of a component that uses this
 approach to keep track of button presses:
 
-```js
-import React, {Component} from 'react';
+```jsx
+import React, { Component } from "react";
 
 class ButtonCounter extends Component {
   constructor() {
-    super()
+    super();
     // initial state has count set at 0
     this.state = {
-      count: 0
-    }
+      count: 0,
+    };
   }
 
   handleClick = () => {
     // when handleClick is called, newCount is set to whatever this.state.count is plus 1 PRIOR to calling this.setState
-    let newCount = this.state.count + 1
+    let newCount = this.state.count + 1;
     this.setState({
-      count: newCount
-    })
-  }
+      count: newCount,
+    });
+  };
 
   render() {
     return (
@@ -342,11 +342,11 @@ class ButtonCounter extends Component {
         <h1>{this.state.count}</h1>
         <button onClick={this.handleClick}>Click Me</button>
       </div>
-    )
+    );
   }
 }
 
-export default ButtonCounter
+export default ButtonCounter;
 ```
 
 This works, but React actually provides a built in solution. Instead of passing an object
@@ -355,7 +355,7 @@ will be passed the component state from when that `setState` was called. This is
 referred to as the _previous state_. With this knowledge, we can rewrite the `handleClick`
 function to:
 
-```js
+```jsx
 ...
 
 handleClick = () => {
@@ -385,8 +385,8 @@ whatever it is.
 
 This component, let's call it `LightSwitch`, would look something like this:
 
-```js
-import React from 'react';
+```jsx
+import React from "react";
 
 class LightSwitch extends React.Component {
   constructor() {
@@ -394,23 +394,25 @@ class LightSwitch extends React.Component {
 
     // Initial state is defined
     this.state = {
-      toggled: false
+      toggled: false,
     };
   }
 
   // when handleClick is called, setState will update the state so that toggle is reversed
   handleClick = () => {
-    this.setState(previousState => {
+    this.setState((previousState) => {
       return {
-        toggled: !previousState.toggled
-      }
-    })
-  }
+        toggled: !previousState.toggled,
+      };
+    });
+  };
 
   render() {
     return (
       <div>
-        <button onClick={this.handleClick}>{this.state.toggled ? "ON" : "OFF"}</button>
+        <button onClick={this.handleClick}>
+          {this.state.toggled ? "ON" : "OFF"}
+        </button>
       </div>
     );
   }
@@ -442,9 +444,9 @@ ability to update and add to!
 
 ## Resources
 
-- [State and Lifecycle][React's official documentation]
+- [State and Lifecycle][react's official documentation]
 - [Transferring props](https://facebook.github.io/react/docs/transferring-props.html)
 - [Component API](https://facebook.github.io/react/docs/component-api.html)
 
 [so]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax
-[React's official documentation]: https://reactjs.org/docs/state-and-lifecycle.html#state-updates-may-be-asynchronous
+[react's official documentation]: https://reactjs.org/docs/state-and-lifecycle.html#state-updates-may-be-asynchronous
